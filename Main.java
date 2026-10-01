@@ -1,8 +1,8 @@
-public class Main {
-
+public class main {
     public static void main(String[] args) {
-    System.out.println("Hello world");
-
+        board cb = new board(); 
+        // System.out.println(cb);
+        cb.boardSet();
+        cb.boardPrint();
     }
-    
 }
