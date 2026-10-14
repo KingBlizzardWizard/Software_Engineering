@@ -1,0 +1,10 @@
+
+# Local database and SQLite temporary files
+chessplus.db
+chessplus.db-shm
+chessplus.db-wal
+
+# Generated Java files
+bin/
+target/
+*.class

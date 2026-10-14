@@ -28,12 +28,14 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.14.1</version>
-                <configuration>
-                    <release>17</release>
-                    <excludes>
-                        <exclude>target/**</exclude>
-                    </excludes>
-                </configuration>
+                
+<configuration>
+    <release>17</release>
+    <includes>
+        <include>login.java</include>
+    </includes>
+</configuration>
+
             </plugin>
         </plugins>
     </build>
