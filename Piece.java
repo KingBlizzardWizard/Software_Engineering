@@ -1,8 +1,17 @@
 public class Piece {
+    boolean isWhite;
+    boolean isOccupied;
+    String pieceType;
+    
 
-        int pos;
-        int boardSize = 64 ;
-        boolean isWhite;
-        int[] currentpos = new int [boardSize];
-        int[] validMoves = new int [boardSize];
+    public boolean checkIfWhite(){
+        return isWhite;
+    }
+    public String getPieceType(){
+        return pieceType;
+    }
+
+
+
+    
 }
