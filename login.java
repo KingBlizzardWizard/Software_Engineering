@@ -19,7 +19,7 @@ import javax.swing.SwingUtilities;
 
 public class login {
     //tells java where the SQLite database is located
-    static String DB_URL = "jdbc:sqlite:chessplus.db";
+    static String DB_URL = "jdbc:sqlite:userdata.db";
 
 
     public static void main(String[] args) {
