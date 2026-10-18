@@ -2,20 +2,23 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 
-import javax.swing.*;
-import javax.swing.border.Border;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 
 public class Main {
 
     public static void main(String[] args) {
-        initializeDefaultProfile();
         
     }
 
 
-    public static void initializeDefaultProfile(){ // function to be run at the beginning of main that creates the empty
+    public static void initializeDefaultProfile(String user_ID){ // function to be run at the beginning of main that creates the empty
         //profile fields to be replaced later
+        //
 
         //creates initial JFrame
         JFrame frame = new JFrame("My Profile");
@@ -84,6 +87,12 @@ public class Main {
 
         toolbar.setPreferredSize(new Dimension(700,300));
         frame.add(toolbar, BorderLayout.EAST); // adds the toolbar to the main frame
+
+
+        // LOAD SQL
+        // bio.setTEXT ( SQL QUERY)
+        // name. setText ( SQL QUERY)
+        // ````
     }
 
 
