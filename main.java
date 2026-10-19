@@ -7,8 +7,10 @@ import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
@@ -192,9 +194,26 @@ public class Main {
             textWindow.setSize(600,300);
             textWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             textWindow.setVisible(true);
-            JTextField textBox = new JTextField();
-            textPanel.add(textBox);
+            // JTextField textBox = new JTextField();
+            JComboBox monthBox = new JComboBox();
+            // monthBox.setPreferredSize(null);
+            
+            for (int i=0; i<13;i++){
+                monthBox.addItem(i);
 
+            }
+            textPanel.add(monthBox);
+            
+            
+            JComboBox dayBox = new JComboBox();
+            dayBox.setSize(100, 100);
+            //It can have fluctuating drop down size depending on which month was selected
+            //monthBox.getName
+            for (int i=0; i<32;i++){
+                dayBox.addItem(i);
+ 
+            }
+               textPanel.add(dayBox);
             // add confirm / cancel buttons
             JButton confirmButton = new JButton();
             JButton cancelButton = new JButton();
@@ -206,7 +225,9 @@ public class Main {
             //functionality for confirm button
 
             confirmButton.addActionListener(f -> {
-                String newBirthday = textBox.getText();
+                String newMonth = monthBox.getSelectedItem().toString();
+                String newDay = dayBox.getSelectedItem().toString();
+                String newBirthday = newMonth + "/" + newDay;
                 String insertData = "UPDATE player SET Birthday = ? WHERE name = ?";
                 System.out.println("Birthday updated to: " + newBirthday);
 
@@ -258,6 +279,13 @@ public class Main {
 
             confirmButton.addActionListener(f -> {
                 String newBio = textBox.getText();
+                if (newBio.length() >100){
+                    JOptionPane.showMessageDialog(frame,
+                    "Bio must be less than 100 characters. Currently bio is " + newBio.length()+" characters.");
+                    //stops the registation if one of the fields are empty
+                return;
+
+                }else{
                 String insertData = "UPDATE player SET Bio = ? WHERE name = ?";
                 System.out.println("username updated to: " + newBio);
 
@@ -274,7 +302,7 @@ public class Main {
                 } catch(SQLException l){
                     System.out.println("failed to insert");
                 textWindow.dispose();
-                }});
+                }}});
             // functionality for cancel button
             cancelButton.addActionListener(d ->{
                 textWindow.dispose();
