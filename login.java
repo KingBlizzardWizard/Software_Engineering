@@ -28,7 +28,7 @@ public class login {
         SwingUtilities.invokeLater(login::createWindow);
     }
     // creates and displays the login window
-    private static void createWindow() {
+    public static void createWindow() {
         // creates the main window
         JFrame frame = new JFrame("Login Menu");
 
