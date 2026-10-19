@@ -1,15 +1,23 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 
 
 public class Main {
+    private static final String DB_URL = "jdbc:sqlite:userdata.db";
+    public static String retrievedBio;
+    public static String retrievedBirthday;
+    public static String retrievedUsername;
 
     public static void main(String[] args) {
         
@@ -18,7 +26,37 @@ public class Main {
 
     public static void initializeDefaultProfile(String user_ID){ // function to be run at the beginning of main that creates the empty
         //profile fields to be replaced later
-        //
+
+        System.out.println("Loading Query:");
+        String sqlQuery = "SELECT Username"
+                        + " FROM player"
+                        + " WHERE name = '" + user_ID + "'";
+        System.out.println(sqlQuery);
+
+        // connect to database and sets username, bio, and birthday strings to the retrieved values
+        try (var conn =  DriverManager.getConnection(DB_URL)){ // creates a conn object that connects to the database
+            var stmt = conn.createStatement(); // creates a statement that will be able to query the database
+            var rs = stmt.executeQuery(sqlQuery); // stores the result of the query
+            System.out.println("Connected to SQLite Database");
+
+            // get username
+            retrievedUsername = rs.getString("Username"); 
+            System.out.println(retrievedUsername);
+
+            // get bio 
+            sqlQuery = "SELECT Bio FROM player WHERE name = '" + user_ID + "'";
+            stmt.executeQuery(sqlQuery);
+            retrievedBio = rs.getString("Bio");
+            System.out.println(retrievedBio);
+
+            // get birthday
+            sqlQuery = "SELECT Birthday FROM player WHERE name = '" + user_ID + "'";
+            stmt.executeQuery(sqlQuery);
+            retrievedBirthday = rs.getString("Birthday");
+            System.out.println(retrievedBirthday);
+
+        } catch (SQLException e){ System.out.println(e.getMessage());  
+        }
 
         //creates initial JFrame
         JFrame frame = new JFrame("My Profile");
@@ -44,19 +82,28 @@ public class Main {
 
          // creates left bottom side which will have picture, name, bio, description
         JPanel descriptionPanel = new JPanel(new GridLayout(0,1)); //creates panel
+            JLabel bio = new JLabel();
+            JLabel username = new JLabel();
+            JLabel birthday = new JLabel();
+            bio.setText("No bio set yet!");
+            birthday.setText("No birthday set yet!");
+            username.setText("No Username set yet!");
 
+            if (retrievedBio != null)
+                bio.setText(retrievedBio);
+            if (retrievedBirthday != null)
+                birthday.setText(retrievedBirthday);
+            if (retrievedUsername != null)
+                username.setText(retrievedUsername);
 
-        // user info fields
-        JLabel bio = new JLabel("User bio here");
-        JLabel username = new JLabel("Username here");
-        JLabel birthday = new JLabel("Birthday here");
         // sets a size for the panel so it does not push the right side panel off of the screen
         descriptionPanel.setPreferredSize(new Dimension(600,100));
 
 
         //add labels to panel
-        descriptionPanel.add(bio);
+
         descriptionPanel.add(username);
+        descriptionPanel.add(bio);
         descriptionPanel.add(birthday);
         frame.add(descriptionPanel, BorderLayout.WEST); //adds panel to frame
 
@@ -77,8 +124,43 @@ public class Main {
         // buttons for the setting tab 
         JButton profileButton = new JButton("Change Profile Picture");
         settings.add(profileButton);
+        
+
+
+
+
         JButton changeUsernameButton = new JButton("Change username");
         settings.add(changeUsernameButton);
+        changeUsernameButton.addActionListener( e -> { // creating textbox
+            System.out.println("Change username button clicked");
+            JFrame textWindow = new JFrame("Enter new username");
+            JPanel textPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+            textPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+            textWindow.add(textPanel);
+            textWindow.setSize(600,300);
+            textWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            textWindow.setVisible(true);
+
+
+            JTextField textBox = new JTextField();
+            textPanel.add(textBox);
+
+
+            JButton confirmButton = new JButton();
+            JButton cancelButton = new JButton();
+            confirmButton.setText("Confirm");
+            cancelButton.setText("Cancel");
+            textPanel.add(confirmButton);
+            textWindow.add(cancelButton);
+
+            }
+        );
+
+
+
+
+
+
         JButton changeBioButton = new JButton("Change Bio");
         settings.add(changeBioButton);
         JButton logoutButton = new JButton("Logout");
@@ -89,10 +171,6 @@ public class Main {
         frame.add(toolbar, BorderLayout.EAST); // adds the toolbar to the main frame
 
 
-        // LOAD SQL
-        // bio.setTEXT ( SQL QUERY)
-        // name. setText ( SQL QUERY)
-        // ````
     }
 
 
