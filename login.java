@@ -1,4 +1,3 @@
-
 // imports libraries for gui, login and database
 import java.awt.GridLayout;
 import java.sql.Connection;
