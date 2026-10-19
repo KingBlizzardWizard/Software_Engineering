@@ -30,7 +30,7 @@ public class login {
     // creates and displays the login window
     private static void createWindow() {
         // creates the main window
-        JFrame frame = new JFrame("ChessPlus Login");
+        JFrame frame = new JFrame("Login Menu");
 
         //closes the program when the window is closed
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
