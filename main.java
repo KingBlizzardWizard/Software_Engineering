@@ -13,7 +13,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 
-public class Main {
+public class main {
     private static final String DB_URL = "jdbc:sqlite:userdata.db";
     public static String retrievedBio;
     public static String retrievedBirthday;
@@ -131,7 +131,7 @@ public class Main {
 
         JButton changeUsernameButton = new JButton("Change username");
         settings.add(changeUsernameButton);
-        changeUsernameButton.addActionListener( e -> { // creating textbox
+        changeUsernameButton.addActionListener( e -> { // creating frame and adding panel
             System.out.println("Change username button clicked");
             JFrame textWindow = new JFrame("Enter new username");
             JPanel textPanel = new JPanel(new GridLayout(3, 2, 10, 10));
@@ -140,18 +140,20 @@ public class Main {
             textWindow.setSize(600,300);
             textWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             textWindow.setVisible(true);
-
-
             JTextField textBox = new JTextField();
             textPanel.add(textBox);
 
-
+            // add confirm / cancel buttons
             JButton confirmButton = new JButton();
             JButton cancelButton = new JButton();
             confirmButton.setText("Confirm");
             cancelButton.setText("Cancel");
             textPanel.add(confirmButton);
-            textWindow.add(cancelButton);
+            textPanel.add(cancelButton);
+
+            //functionality for confirm button
+
+            // functionality for cancel button
 
             }
         );
