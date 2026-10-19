@@ -116,6 +116,7 @@ public class Main {
         JPanel friends = new JPanel(); // panels on toolbar
         JPanel posts = new JPanel();
         JPanel settings = new JPanel();
+
         toolbar.addTab("Posts", posts); //adds the tabs to the toolbar
         toolbar.addTab("Friends",friends);
         toolbar.addTab("Settings", settings);
@@ -180,14 +181,60 @@ public class Main {
             } // end of confirm button
         );
 
+        JButton changeBirthdayButton = new JButton("Change birthday");
+        settings.add(changeBirthdayButton);
+        changeBirthdayButton.addActionListener( e -> { // creating frame and adding panel for change Birthday
+            System.out.println("Change birthday button clicked");
+            JFrame textWindow = new JFrame("Enter new birthday");
+            JPanel textPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+            textPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+            textWindow.add(textPanel);
+            textWindow.setSize(600,300);
+            textWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            textWindow.setVisible(true);
+            JTextField textBox = new JTextField();
+            textPanel.add(textBox);
+
+            // add confirm / cancel buttons
+            JButton confirmButton = new JButton();
+            JButton cancelButton = new JButton();
+            confirmButton.setText("Confirm");
+            cancelButton.setText("Cancel");
+            textPanel.add(confirmButton);
+            textPanel.add(cancelButton);
+
+            //functionality for confirm button
+
+            confirmButton.addActionListener(f -> {
+                String newBirthday = textBox.getText();
+                String insertData = "UPDATE player SET Birthday = ? WHERE name = ?";
+                System.out.println("Birthday updated to: " + newBirthday);
+
+                try (var conn =  DriverManager.getConnection(DB_URL)){ // creates a conn object that connects to the database
+                PreparedStatement pstmt = conn.prepareStatement(insertData); // creates a statement that will be able to query the database
+                System.out.println("Connected to SQLite Database");
+                pstmt.setString(1, newBirthday);
+                pstmt.setString(2, user_ID);
 
 
-
+                System.out.println("Birthday updated!");
+                pstmt.executeUpdate();
+                birthday.setText(newBirthday);
+                } catch(SQLException l){
+                    System.out.println("failed to insert");
+                textWindow.dispose();
+                }});
+            // functionality for cancel button
+            cancelButton.addActionListener(d ->{
+                textWindow.dispose();
+            });
+            } // end of confirm button
+        );
 
 
         JButton changeBioButton = new JButton("Change Bio");
         settings.add(changeBioButton);
-        changeBioButton.addActionListener( e -> { // creating frame and adding panel for change username
+        changeBioButton.addActionListener( e -> { // creating frame and adding panel for change Bio
             System.out.println("Change bio button clicked");
             JFrame textWindow = new JFrame("Enter new bio");
             JPanel textPanel = new JPanel(new GridLayout(3, 2, 10, 10));
@@ -223,7 +270,7 @@ public class Main {
 
                 System.out.println("username updated!");
                 pstmt.executeUpdate();
-                username.setText(newBio);
+                bio.setText(newBio);
                 } catch(SQLException l){
                     System.out.println("failed to insert");
                 textWindow.dispose();
