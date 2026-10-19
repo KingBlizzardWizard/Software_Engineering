@@ -183,6 +183,7 @@ public class login {
                             "Login successful! Welcome, " + username
                             + "!\nPlayer ID: " + rs.getInt("player_id"));
                             Main.initializeDefaultProfile(username); // QUERY SQL FOR PLAYER ID
+                            frame.dispose();
                     } else {
 
                         // no matching account was found
