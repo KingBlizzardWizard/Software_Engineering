@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
@@ -13,7 +14,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 
-public class main {
+public class Main {
     private static final String DB_URL = "jdbc:sqlite:userdata.db";
     public static String retrievedBio;
     public static String retrievedBirthday;
@@ -131,7 +132,7 @@ public class main {
 
         JButton changeUsernameButton = new JButton("Change username");
         settings.add(changeUsernameButton);
-        changeUsernameButton.addActionListener( e -> { // creating frame and adding panel
+        changeUsernameButton.addActionListener( e -> { // creating frame and adding panel for change username
             System.out.println("Change username button clicked");
             JFrame textWindow = new JFrame("Enter new username");
             JPanel textPanel = new JPanel(new GridLayout(3, 2, 10, 10));
@@ -153,9 +154,30 @@ public class main {
 
             //functionality for confirm button
 
-            // functionality for cancel button
+            confirmButton.addActionListener(f -> {
+                String newUsername = textBox.getText();
+                String insertData = "UPDATE player SET Username = ? WHERE name = ?";
+                System.out.println("username updated to: " + newUsername);
 
-            }
+                try (var conn =  DriverManager.getConnection(DB_URL)){ // creates a conn object that connects to the database
+                PreparedStatement pstmt = conn.prepareStatement(insertData); // creates a statement that will be able to query the database
+                System.out.println("Connected to SQLite Database");
+                pstmt.setString(1, newUsername);
+                pstmt.setString(2, user_ID);
+
+
+                System.out.println("username updated!");
+                pstmt.executeUpdate();
+                username.setText(newUsername);
+                } catch(SQLException l){
+                    System.out.println("failed to insert");
+                textWindow.dispose();
+                }});
+            // functionality for cancel button
+            cancelButton.addActionListener(d ->{
+                textWindow.dispose();
+            });
+            } // end of confirm button
         );
 
 
@@ -165,6 +187,53 @@ public class main {
 
         JButton changeBioButton = new JButton("Change Bio");
         settings.add(changeBioButton);
+        changeBioButton.addActionListener( e -> { // creating frame and adding panel for change username
+            System.out.println("Change bio button clicked");
+            JFrame textWindow = new JFrame("Enter new bio");
+            JPanel textPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+            textPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+            textWindow.add(textPanel);
+            textWindow.setSize(600,300);
+            textWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            textWindow.setVisible(true);
+            JTextField textBox = new JTextField();
+            textPanel.add(textBox);
+
+            // add confirm / cancel buttons
+            JButton confirmButton = new JButton();
+            JButton cancelButton = new JButton();
+            confirmButton.setText("Confirm");
+            cancelButton.setText("Cancel");
+            textPanel.add(confirmButton);
+            textPanel.add(cancelButton);
+
+            //functionality for confirm button
+
+            confirmButton.addActionListener(f -> {
+                String newBio = textBox.getText();
+                String insertData = "UPDATE player SET Username = ? WHERE name = ?";
+                System.out.println("username updated to: " + newBio);
+
+                try (var conn =  DriverManager.getConnection(DB_URL)){ // creates a conn object that connects to the database
+                PreparedStatement pstmt = conn.prepareStatement(insertData); // creates a statement that will be able to query the database
+                System.out.println("Connected to SQLite Database");
+                pstmt.setString(1, newBio);
+                pstmt.setString(2, user_ID);
+
+
+                System.out.println("username updated!");
+                pstmt.executeUpdate();
+                username.setText(newBio);
+                } catch(SQLException l){
+                    System.out.println("failed to insert");
+                textWindow.dispose();
+                }});
+            // functionality for cancel button
+            cancelButton.addActionListener(d ->{
+                textWindow.dispose();
+            });
+            } // end of confirm button
+        );
         JButton logoutButton = new JButton("Logout");
         settings.add(logoutButton);
 
