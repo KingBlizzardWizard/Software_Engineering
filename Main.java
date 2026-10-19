@@ -21,7 +21,7 @@ public class Main {
     public static String retrievedUsername;
 
     public static void main(String[] args) {
-        
+        login.createWindow();
     }
 
 
@@ -211,7 +211,7 @@ public class Main {
 
             confirmButton.addActionListener(f -> {
                 String newBio = textBox.getText();
-                String insertData = "UPDATE player SET Username = ? WHERE name = ?";
+                String insertData = "UPDATE player SET Bio = ? WHERE name = ?";
                 System.out.println("username updated to: " + newBio);
 
                 try (var conn =  DriverManager.getConnection(DB_URL)){ // creates a conn object that connects to the database
@@ -235,6 +235,11 @@ public class Main {
             } // end of confirm button
         );
         JButton logoutButton = new JButton("Logout");
+        logoutButton.addActionListener(k ->{
+            login.createWindow();
+            frame.dispose();
+        });
+
         settings.add(logoutButton);
 
 
