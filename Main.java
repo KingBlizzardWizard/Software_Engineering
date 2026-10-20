@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 
 public class Main {
     private static final String DB_URL = "jdbc:sqlite:userdata.db";
+    private static final String DB_PostURL = "jdbc:sqlite:posts.db";
     public static String retrievedBio;
     public static String retrievedBirthday;
     public static String retrievedUsername;
@@ -124,6 +125,70 @@ public class Main {
         toolbar.addTab("Settings", settings);
         posts.add(new JLabel("Posts go here!")); // adds text inside of the tabs
         friends.add(new JLabel("Friends go here!"));
+
+            int j = 1;
+
+            String postSqlQuery = "SELECT PostText"
+                                    + " FROM posts"
+                                    + " WHERE PostID = '" + j + "'"; 
+                                    //The 2 is the PostID, make it read PostID rather than hard coding it.
+            System.out.println(postSqlQuery);            
+
+
+
+            try(var conn = DriverManager.getConnection(DB_PostURL)){
+  
+                var stmt = conn.createStatement();
+                var rs = stmt.executeQuery(postSqlQuery);
+                System.out.println("Connected to SQLite Database");
+                String retrievedText = rs.getString("PostText"); 
+                JLabel text = new JLabel("\n" + retrievedText);//Not making it on new line
+                System.out.println(retrievedText);
+                posts.add(text);
+            } catch (SQLException e1){
+                System.out.println(e1.getMessage());
+            }
+
+
+
+        // buttons for the posts tab 
+        JButton postsButton = new JButton("New Post");
+        posts.add(postsButton);
+        postsButton.addActionListener(e -> {
+            System.out.println("Post button clicked");
+            try(var conn = DriverManager.getConnection(DB_PostURL)){
+                String checkSql =
+                    "SELECT 1 FROM post WHERE name = ?";
+                    //This is currently the issue, make it actually check the correct db 
+                    try (PreparedStatement check =
+                         conn.prepareStatement(checkSql)) {
+                            check.setString(j, "Post #");
+                         }
+                    String sql = 
+                        "INSERT INTO posts (PostText) VALUES (?)";
+
+                    try (PreparedStatement stmt =
+                         conn.prepareStatement(sql)) {
+                    //replaces the first ? with the username
+                    stmt.setString(1, "Post" + j);
+                    //executres the insert statement to save the new account
+                    stmt.executeUpdate();
+                }
+
+                var stmt = conn.createStatement();
+                var rs = stmt.executeQuery(postSqlQuery);
+                System.out.println("Connected to SQLite Database");
+                String retrievedText = rs.getString("PostText"); 
+                JLabel text = new JLabel("\n" + retrievedText);//Not making it on new line
+                System.out.println(retrievedText);
+                posts.add(text);
+            } catch (SQLException e1){
+                System.out.println(e1.getMessage());
+            }
+            
+
+
+        });
 
         // buttons for the setting tab 
         JButton profileButton = new JButton("Change Profile Picture");
