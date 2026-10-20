@@ -207,7 +207,7 @@ public class Main {
             textPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
             textWindow.add(textPanel);
             textWindow.setSize(600,300);
-            textWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            textWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             textWindow.setVisible(true);
             JTextField textBox = new JTextField();
             textPanel.add(textBox);
@@ -257,7 +257,7 @@ public class Main {
             textPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
             textWindow.add(textPanel);
             textWindow.setSize(600,300);
-            textWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            textWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             textWindow.setVisible(true);
             // JTextField textBox = new JTextField();
             JComboBox monthBox = new JComboBox();
@@ -327,7 +327,7 @@ public class Main {
             textPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
             textWindow.add(textPanel);
             textWindow.setSize(600,300);
-            textWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            textWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             textWindow.setVisible(true);
             JTextField textBox = new JTextField();
             textPanel.add(textBox);
