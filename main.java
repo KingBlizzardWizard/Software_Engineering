@@ -7,8 +7,10 @@ import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
@@ -16,6 +18,7 @@ import javax.swing.JTextField;
 
 public class Main {
     private static final String DB_URL = "jdbc:sqlite:userdata.db";
+    private static final String DB_PostURL = "jdbc:sqlite:posts.db";
     public static String retrievedBio;
     public static String retrievedBirthday;
     public static String retrievedUsername;
@@ -123,6 +126,70 @@ public class Main {
         posts.add(new JLabel("Posts go here!")); // adds text inside of the tabs
         friends.add(new JLabel("Friends go here!"));
 
+            int j = 1;
+
+            String postSqlQuery = "SELECT PostText"
+                                    + " FROM posts"
+                                    + " WHERE PostID = '" + j + "'"; 
+                                    //The 2 is the PostID, make it read PostID rather than hard coding it.
+            System.out.println(postSqlQuery);            
+
+
+
+            try(var conn = DriverManager.getConnection(DB_PostURL)){
+  
+                var stmt = conn.createStatement();
+                var rs = stmt.executeQuery(postSqlQuery);
+                System.out.println("Connected to SQLite Database");
+                String retrievedText = rs.getString("PostText"); 
+                JLabel text = new JLabel("\n" + retrievedText);//Not making it on new line
+                System.out.println(retrievedText);
+                posts.add(text);
+            } catch (SQLException e1){
+                System.out.println(e1.getMessage());
+            }
+
+
+
+        // buttons for the posts tab 
+        JButton postsButton = new JButton("New Post");
+        posts.add(postsButton);
+        postsButton.addActionListener(e -> {
+            System.out.println("Post button clicked");
+            try(var conn = DriverManager.getConnection(DB_PostURL)){
+                String checkSql =
+                    "SELECT 1 FROM post WHERE name = ?";
+                    //This is currently the issue, make it actually check the correct db 
+                    try (PreparedStatement check =
+                         conn.prepareStatement(checkSql)) {
+                            check.setString(j, "Post #");
+                         }
+                    String sql = 
+                        "INSERT INTO posts (PostText) VALUES (?)";
+
+                    try (PreparedStatement stmt =
+                         conn.prepareStatement(sql)) {
+                    //replaces the first ? with the username
+                    stmt.setString(1, "Post" + j);
+                    //executres the insert statement to save the new account
+                    stmt.executeUpdate();
+                }
+
+                var stmt = conn.createStatement();
+                var rs = stmt.executeQuery(postSqlQuery);
+                System.out.println("Connected to SQLite Database");
+                String retrievedText = rs.getString("PostText"); 
+                JLabel text = new JLabel("\n" + retrievedText);//Not making it on new line
+                System.out.println(retrievedText);
+                posts.add(text);
+            } catch (SQLException e1){
+                System.out.println(e1.getMessage());
+            }
+            
+
+
+        });
+
         // buttons for the setting tab 
         JButton profileButton = new JButton("Change Profile Picture");
         settings.add(profileButton);
@@ -192,9 +259,26 @@ public class Main {
             textWindow.setSize(600,300);
             textWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             textWindow.setVisible(true);
-            JTextField textBox = new JTextField();
-            textPanel.add(textBox);
+            // JTextField textBox = new JTextField();
+            JComboBox monthBox = new JComboBox();
+            // monthBox.setPreferredSize(null);
+            
+            for (int i=0; i<13;i++){
+                monthBox.addItem(i);
 
+            }
+            textPanel.add(monthBox);
+            
+            
+            JComboBox dayBox = new JComboBox();
+            dayBox.setSize(100, 100);
+            //It can have fluctuating drop down size depending on which month was selected
+            //monthBox.getName
+            for (int i=0; i<32;i++){
+                dayBox.addItem(i);
+ 
+            }
+               textPanel.add(dayBox);
             // add confirm / cancel buttons
             JButton confirmButton = new JButton();
             JButton cancelButton = new JButton();
@@ -206,7 +290,9 @@ public class Main {
             //functionality for confirm button
 
             confirmButton.addActionListener(f -> {
-                String newBirthday = textBox.getText();
+                String newMonth = monthBox.getSelectedItem().toString();
+                String newDay = dayBox.getSelectedItem().toString();
+                String newBirthday = newMonth + "/" + newDay;
                 String insertData = "UPDATE player SET Birthday = ? WHERE name = ?";
                 System.out.println("Birthday updated to: " + newBirthday);
 
@@ -258,6 +344,13 @@ public class Main {
 
             confirmButton.addActionListener(f -> {
                 String newBio = textBox.getText();
+                if (newBio.length() >100){
+                    JOptionPane.showMessageDialog(frame,
+                    "Bio must be less than 100 characters. Currently bio is " + newBio.length()+" characters.");
+                    //stops the registation if one of the fields are empty
+                return;
+
+                }else{
                 String insertData = "UPDATE player SET Bio = ? WHERE name = ?";
                 System.out.println("username updated to: " + newBio);
 
@@ -274,7 +367,7 @@ public class Main {
                 } catch(SQLException l){
                     System.out.println("failed to insert");
                 textWindow.dispose();
-                }});
+                }}});
             // functionality for cancel button
             cancelButton.addActionListener(d ->{
                 textWindow.dispose();
