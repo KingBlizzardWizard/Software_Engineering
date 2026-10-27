@@ -1,6 +1,9 @@
+// import the ui parts, including necessary layouts
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.FlowLayout;
+import java.awt.CardLayout;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -14,8 +17,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.JTextArea;
+import javax.swing.JScrollPane;
+import javax.swing.BoxLayout;
 
-
+//connects the databases, posts and user data, the variabls hold the profile info retrieved from the database
 public class Main {
     private static final String DB_URL = "jdbc:sqlite:userdata.db";
     private static final String DB_PostURL = "jdbc:sqlite:posts.db";
@@ -23,13 +29,16 @@ public class Main {
     public static String retrievedBirthday;
     public static String retrievedUsername;
 
+    // main method, this starts by opening the UI window
     public static void main(String[] args) {
         login.createWindow();
     }
 
-
+    // declares the method that can be called from other classes, accepts user id as perameter, 
+    //creates a string containg the SQL quesry we need from the db
+    // selects the username from palyer where the name matches the users input
     public static void initializeDefaultProfile(String user_ID){ // function to be run at the beginning of main that creates the empty
-        //profile fields to be replaced later
+        
 
         System.out.println("Loading Query:");
         String sqlQuery = "SELECT Username"
@@ -37,105 +46,207 @@ public class Main {
                         + " WHERE name = '" + user_ID + "'";
         System.out.println(sqlQuery);
 
-        // connect to database and sets username, bio, and birthday strings to the retrieved values
-        try (var conn =  DriverManager.getConnection(DB_URL)){ // creates a conn object that connects to the database
-            var stmt = conn.createStatement(); // creates a statement that will be able to query the database
-            var rs = stmt.executeQuery(sqlQuery); // stores the result of the query
+        // opens a connection to the database and executes the SQL
+        // creates the SQL statement object, stores its results in r 
+        //reads the username column and saves it in retrieved username
+        try (var conn =  DriverManager.getConnection(DB_URL)){ 
+            var stmt = conn.createStatement(); 
+            var rs = stmt.executeQuery(sqlQuery); 
             System.out.println("Connected to SQLite Database");
 
-            // get username
+            // gets the username from the query result
+            // stores the value in the variable so it can be used elsewhere
             retrievedUsername = rs.getString("Username"); 
             System.out.println(retrievedUsername);
 
-            // get bio 
+            // gets the bio from the query result
+            //replaces the previous query with one that selects teh bio
+            //executes the new query and store it in the bio
             sqlQuery = "SELECT Bio FROM player WHERE name = '" + user_ID + "'";
             stmt.executeQuery(sqlQuery);
             retrievedBio = rs.getString("Bio");
             System.out.println(retrievedBio);
 
-            // get birthday
+            // gets the birthday from the query result
+            //replaces the preivous quesry with on that selects birthday
+            //executes the new one and stores it in birthday
             sqlQuery = "SELECT Birthday FROM player WHERE name = '" + user_ID + "'";
             stmt.executeQuery(sqlQuery);
             retrievedBirthday = rs.getString("Birthday");
             System.out.println(retrievedBirthday);
 
+            // catches SQL related exceptions that are thrown inside the try block
+            // e.getmessage provdies the description of the error, and its printed to teh console after
         } catch (SQLException e){ System.out.println(e.getMessage());  
         }
 
-        //creates initial JFrame
+        //creates the application window called my profile will change it to a new name in the future
+        //makes it so that the app terminates when the user closes the window
+        //sets the initial size of the window, 900x650
+        //centers the screen to teh window
+        //divides the window into five different regions, N,S,E,W and Center
         JFrame frame = new JFrame("My Profile");
-        frame.setSize(1366,720);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+        frame.setSize(900, 650);
+        frame.setLocationRelativeTo(null);
+        frame.setLayout(new BorderLayout());
 
+        // Nav bar, creates a container to group the related components
+        // arranges the components horrrizontally
+        //each JButton creates a clickable button with display text
+        JPanel navBar = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 8));
+        JButton homeButton = new JButton("Home");
+        JButton profileNavButton = new JButton("Profile");
+        JButton friendsNavButton = new JButton("Friends");
+        JButton settingsNavButton = new JButton("Settings");
+        //These add all the buttons to the insde nav panel, adding navbar to the top of the window too
+        navBar.add(homeButton);
+        navBar.add(profileNavButton);
+        navBar.add(friendsNavButton);
+        navBar.add(settingsNavButton);
+        //This line specifically makes it appear on the top but again can be moved around if we change our mind 
+        frame.add(navBar, BorderLayout.NORTH);
 
-        // top left panel which will have the profile picture and buttons to change profile details or logout
-        JPanel profilePanel = new JPanel(); // panel for picture
-        JLabel profileText = new JLabel("Profile picture will go here!"); // some text where the picture will be
+        // mainpanel uses borderlayout to organize the left sidebar, center and the right sidebar
+        // This also specifies a new dimentions with a width of 180 pixels, no specific height is needed
+        // side panels are empty right now leaving room for growth
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        JPanel leftPanel = new JPanel();
+        leftPanel.setPreferredSize(new Dimension(180, 0));
+        JPanel rightPanel = new JPanel();
+        rightPanel.setPreferredSize(new Dimension(180, 0));
 
-        profilePanel.add(profileText); // adds the text to the panel
+        // The profile section is on the left
+        //adds vertical spacing between the regions
+        // jlabel displays the text and the nit gets centered horizontally
+        //the prefered size creates the dimensitons of the profile picture area
+        //the picture placeholder gets centered north above the profile details
+        JPanel profileContent = new JPanel(new BorderLayout(5, 5));
+        JPanel profilePanel = new JPanel(new BorderLayout());
+        JLabel profileText = new JLabel("Profile picture will go here!", JLabel.CENTER);
+        profilePanel.setPreferredSize(new Dimension(160, 180));
+        profilePanel.add(profileText, BorderLayout.CENTER);
+        profileContent.add(profilePanel, BorderLayout.NORTH);
 
-        profilePanel.setPreferredSize(new Dimension(600,300));
-        profileText.setPreferredSize(new Dimension(600,300)); // sets a size for the panel so other 
-        // elements arent pushed too far out of order
+        //creates a grid with one column and as many rows that are needed
+        JPanel descriptionPanel = new JPanel(new GridLayout(0, 1));
+        JLabel bio = new JLabel();
+        JLabel username = new JLabel();
+        JLabel birthday = new JLabel();
+        //these are the default values of bio birthday and username, can be changed by the user but is displayed when there are no db value found
 
-        //adds the new panel to the main frame
-        frame.add(profilePanel, BorderLayout.WEST);
+        bio.setText("No bio set yet!");
+        birthday.setText("No birthday set yet!");
+        username.setText("No Username set yet!");
 
+        //checks if the variable isnt null, then if it contains a value replace the default text
+        if (retrievedBio != null) bio.setText(retrievedBio);
+        if (retrievedBirthday != null) birthday.setText(retrievedBirthday);
+        if (retrievedUsername != null) username.setText(retrievedUsername);
 
-
-         // creates left bottom side which will have picture, name, bio, description
-        JPanel descriptionPanel = new JPanel(new GridLayout(0,1)); //creates panel
-            JLabel bio = new JLabel();
-            JLabel username = new JLabel();
-            JLabel birthday = new JLabel();
-            bio.setText("No bio set yet!");
-            birthday.setText("No birthday set yet!");
-            username.setText("No Username set yet!");
-
-            if (retrievedBio != null)
-                bio.setText(retrievedBio);
-            if (retrievedBirthday != null)
-                birthday.setText(retrievedBirthday);
-            if (retrievedUsername != null)
-                username.setText(retrievedUsername);
-
-        // sets a size for the panel so it does not push the right side panel off of the screen
-        descriptionPanel.setPreferredSize(new Dimension(600,100));
-
-
-        //add labels to panel
-
+        //Stacks the labels in the order or username, bio, birthday
+        // adds 8 pixels of empty padding around the description panel
+        //places the profile content at the top of the left sidebar
         descriptionPanel.add(username);
         descriptionPanel.add(bio);
         descriptionPanel.add(birthday);
-        frame.add(descriptionPanel, BorderLayout.WEST); //adds panel to frame
+        descriptionPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+        profileContent.add(descriptionPanel, BorderLayout.CENTER);
+        leftPanel.setLayout(new BorderLayout());
+        leftPanel.add(profileContent, BorderLayout.NORTH);
 
+        //Lets one panel contin more than one panel but only displays one at a time 
+        CardLayout pageLayout = new CardLayout();
+        JPanel pagePanel = new JPanel(pageLayout);
 
+        // Feed title sits at the top with teh padding around it 
+        JPanel postsPage = new JPanel(new BorderLayout());
+        JLabel postsTitle = new JLabel("Feed", JLabel.CENTER);
+        postsTitle.setBorder(BorderFactory.createEmptyBorder(15, 5, 15, 5));
+        postsPage.add(postsTitle, BorderLayout.NORTH);
 
-
-        // creates a toolbar
-        JTabbedPane toolbar = new JTabbedPane();
-        JPanel friends = new JPanel(); // panels on toolbar
+        //stacks the components vertically, y_axis
+        // the empty border adds padding around the feed
         JPanel posts = new JPanel();
-        JPanel settings = new JPanel();
+        posts.setLayout(new BoxLayout(posts, BoxLayout.Y_AXIS));
+        posts.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        toolbar.addTab("Posts", posts); //adds the tabs to the toolbar
-        toolbar.addTab("Friends",friends);
-        toolbar.addTab("Settings", settings);
-        posts.add(new JLabel("Posts go here!")); // adds text inside of the tabs
-        friends.add(new JLabel("Friends go here!"));
+        // Creates a post card, the empty spaces are used to space out the cards 
+        posts.add(createPostCard("Sample Post 1 here"));
+        posts.add(new JLabel(" "));
+        posts.add(createPostCard("Sample Post 2 here"));
+        posts.add(new JLabel(" "));
+        posts.add(createPostCard("Sample Post 3 here"));
+        posts.add(new JLabel(" "));
+
+        // provides scrolling when the feed becomes taller than the visible space
+        //keeps it in the center of the page 
+        JScrollPane postsScroll = new JScrollPane(posts);
+        postsScroll.setBorder(BorderFactory.createEmptyBorder());
+        postsPage.add(postsScroll, BorderLayout.CENTER);
+
+    
+        //create a text area with 3 rows and 25 columns as preffered demensions
+        // warps long text on new lines
+        // prefers to wrap at word boudaries rather than split words 
+        JPanel createPostPanel = new JPanel(new BorderLayout(5, 5));
+        createPostPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JTextArea postInput = new JTextArea(3, 25);
+        postInput.setLineWrap(true);
+        postInput.setWrapStyleWord(true);
+
+        //places the text area insde a scroll pane
+        // gives it a titled border called whats on you mind
+        //centers it at the bottom of the feed
+        JScrollPane inputScroll = new JScrollPane(postInput);
+        inputScroll.setBorder(BorderFactory.createTitledBorder("What's on your mind?"));
+        createPostPanel.add(inputScroll, BorderLayout.CENTER);
+        postsPage.add(createPostPanel, BorderLayout.SOUTH);
+
+
+        //creates the friends page as a placeholder
+        //is on the center of the main one, to the right a it
+        JPanel friends = new JPanel(new BorderLayout());
+        friends.add(new JLabel("Friends go here!", JLabel.CENTER), BorderLayout.NORTH);
+        JPanel settings = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+
+        //string names identify each page
+        pagePanel.add(postsPage, "Posts");
+        pagePanel.add(friends, "Friends");
+        pagePanel.add(settings, "Settings");
+
+        //everything gets positioned to the correct spots
+        mainPanel.add(leftPanel, BorderLayout.WEST);
+        mainPanel.add(pagePanel, BorderLayout.CENTER);
+        mainPanel.add(rightPanel, BorderLayout.EAST);
+        frame.add(mainPanel, BorderLayout.CENTER);
+
+
+        // listeners reach or look out for a button click
+        // e -> represents what action to perform
+        // couple of them are placeholders
+        homeButton.addActionListener(e -> pageLayout.show(pagePanel, "Posts"));
+        profileNavButton.addActionListener(e -> pageLayout.show(pagePanel, "Posts"));
+        friendsNavButton.addActionListener(e -> pageLayout.show(pagePanel, "Friends"));
+        settingsNavButton.addActionListener(e -> pageLayout.show(pagePanel, "Settings"));
+       
+        //begins to load a post from SQLLite
+
+        // intj=1 sets the post id to 1
 
             int j = 1;
 
+            //this is the intended query
             String postSqlQuery = "SELECT PostText"
                                     + " FROM posts"
                                     + " WHERE PostID = '" + j + "'"; 
-                                    //The 2 is the PostID, make it read PostID rather than hard coding it.
+                                    
             System.out.println(postSqlQuery);            
 
 
-
+            //opens the posts database and executes the query
+            //retrieves the post text, creates a label containing it 
+            //then adds that label to the feed panel
             try(var conn = DriverManager.getConnection(DB_PostURL)){
   
                 var stmt = conn.createStatement();
@@ -145,6 +256,8 @@ public class Main {
                 JLabel text = new JLabel("\n" + retrievedText);//Not making it on new line
                 System.out.println(retrievedText);
                 posts.add(text);
+
+            //db error for debugging
             } catch (SQLException e1){
                 System.out.println(e1.getMessage());
             }
@@ -152,14 +265,14 @@ public class Main {
 
 
         // buttons for the posts tab 
-        JButton postsButton = new JButton("New Post");
-        posts.add(postsButton);
+        JButton postsButton = new JButton("Create Post");
+        createPostPanel.add(postsButton, BorderLayout.SOUTH);
         postsButton.addActionListener(e -> {
             System.out.println("Post button clicked");
             try(var conn = DriverManager.getConnection(DB_PostURL)){
                 String checkSql =
                     "SELECT 1 FROM post WHERE name = ?";
-                    //This is currently the issue, make it actually check the correct db 
+                   
                     try (PreparedStatement check =
                          conn.prepareStatement(checkSql)) {
                             check.setString(j, "Post #");
@@ -382,18 +495,28 @@ public class Main {
 
         settings.add(logoutButton);
 
+        frame.setVisible(true);
 
-        toolbar.setPreferredSize(new Dimension(700,300));
-        frame.add(toolbar, BorderLayout.EAST); // adds the toolbar to the main frame
 
 
     }
 
 
 
+    // Creates a post card matching new UI
+    private static JPanel createPostCard(String content) {
+        JPanel postCard = new JPanel(new BorderLayout());
+        postCard.setBorder(BorderFactory.createTitledBorder("Post"));
+        postCard.setPreferredSize(new Dimension(450, 90));
+        postCard.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+
+        JLabel postText = new JLabel(content);
+        postText.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        postCard.add(postText, BorderLayout.CENTER);
+        return postCard;
+    }
+
     // SOCIAL MEDIA PROFILE INSTEAD OF CHESS
-
-
 
 }
 
