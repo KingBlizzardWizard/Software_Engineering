@@ -35,6 +35,7 @@
         <include>Login.java</include>
         <include>Run.java</include>
         <include>Page.java</include>
+        <include>Test.java</include>
     </includes>
 </configuration>
 

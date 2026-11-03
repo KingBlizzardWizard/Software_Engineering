@@ -1,6 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.sql.*;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -183,7 +184,19 @@ public class Page {
                 System.out.println(retrievedText);
                 posts.add(text);
             } catch (SQLException e1){
-                System.out.println("bal");
+            //     Connection conn2 =DriverManager.getConnection();
+            //     Statement st = conn2.createStatement();
+            //     st.execute("""
+            //     CREATE TABLE IF NOT EXISTS students (
+            //         student_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            //         first_name TEXT NOT NULL,
+            //         last_name TEXT NOT NULL,
+            //         email TEXT NOT NULL UNIQUE
+            //     )
+            // """);
+
+
+                System.out.println("Post just initialized, try again");
             }
             
 
@@ -227,7 +240,7 @@ public class Page {
                 String insertData = "UPDATE player SET Username = ? WHERE name = ?";
                 System.out.println("username updated to: " + newUsername);
 
-                try (var conn =  DriverManager.getConnection(DB_URL)){ // creates a conn object that connects to the database
+                try (Connection conn =  DriverManager.getConnection(DB_URL)){ // creates a conn object that connects to the database
                 PreparedStatement pstmt = conn.prepareStatement(insertData); // creates a statement that will be able to query the database
                 System.out.println("Connected to SQLite Database");
                 pstmt.setString(1, newUsername);

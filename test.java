@@ -13,9 +13,13 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.BoxLayout;
 
-public class test {
+public class Test {
 
-    public static void main(String[] args) {
+    // public static void main(String[] args) {
+    //     SwingUtilities.invokeLater(() -> createWindow());
+    // }
+
+    public static void run(){
         SwingUtilities.invokeLater(() -> createWindow());
     }
 
