@@ -16,16 +16,16 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-public class login {
+public class Login {
     //tells java where the SQLite database is located
     static String DB_URL = "jdbc:sqlite:userdata.db";
 
+    // public static void main(String[] args) {
+    //     // opens the login window 
+    //     SwingUtilities.invokeLater(login::createWindow);
+    // }
 
-    public static void main(String[] args) {
-        // opens the login window 
 
-        SwingUtilities.invokeLater(login::createWindow);
-    }
     // creates and displays the login window
     public static void createWindow() {
         // creates the main window
@@ -181,7 +181,7 @@ public class login {
                             // displays a welome message to the player and their id
                             "Login successful! Welcome, " + username
                             + "!\nPlayer ID: " + rs.getInt("player_id"));
-                            Main.initializeDefaultProfile(username); // QUERY SQL FOR PLAYER ID
+                            Page.initializeDefaultProfile(username); // QUERY SQL FOR PLAYER ID
                             frame.dispose();
                     } else {
 

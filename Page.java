@@ -16,16 +16,16 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 
-public class Main {
+public class Page {
     private static final String DB_URL = "jdbc:sqlite:userdata.db";
     private static final String DB_PostURL = "jdbc:sqlite:posts.db";
     public static String retrievedBio;
     public static String retrievedBirthday;
     public static String retrievedUsername;
 
-    public static void main(String[] args) {
-        login.createWindow();
-    }
+    // public static void main(String[] args) {
+    //     login.createWindow();
+    // }
 
 
     public static void initializeDefaultProfile(String user_ID){ // function to be run at the beginning of main that creates the empty
@@ -183,7 +183,7 @@ public class Main {
                 System.out.println(retrievedText);
                 posts.add(text);
             } catch (SQLException e1){
-                System.out.println(e1.getMessage());
+                System.out.println("bal");
             }
             
 
@@ -376,7 +376,7 @@ public class Main {
         );
         JButton logoutButton = new JButton("Logout");
         logoutButton.addActionListener(k ->{
-            login.createWindow();
+            Login.createWindow();
             frame.dispose();
         });
 

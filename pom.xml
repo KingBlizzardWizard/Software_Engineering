@@ -32,8 +32,9 @@
 <configuration>
     <release>17</release>
     <includes>
-        <include>login.java</include>
-        <include>Main.java</include>
+        <include>Login.java</include>
+        <include>Run.java</include>
+        <include>Page.java</include>
     </includes>
 </configuration>
 
