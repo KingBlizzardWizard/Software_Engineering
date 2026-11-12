@@ -208,7 +208,13 @@ public class Main {
         //is on the center of the main one, to the right a it
         JPanel friends = new JPanel(new BorderLayout());
         friends.add(new JLabel("Friends go here!", JLabel.CENTER), BorderLayout.NORTH);
-        JPanel settings = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        JPanel settings = new JPanel(new GridLayout(5, 1, 0, 10));
+
+        //centers buttons and adds space around them
+        settings.setBorder(BorderFactory.createEmptyBorder(10, 50, 20, 50)); 
+
+    
+        
 
         //string names identify each page
         pagePanel.add(postsPage, "Posts");
@@ -321,6 +327,7 @@ public class Main {
             textWindow.add(textPanel);
             textWindow.setSize(600,300);
             textWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            textWindow.setLocationRelativeTo(frame);
             textWindow.setVisible(true);
             JTextField textBox = new JTextField();
             textPanel.add(textBox);
@@ -371,6 +378,7 @@ public class Main {
             textWindow.add(textPanel);
             textWindow.setSize(600,300);
             textWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            textWindow.setLocationRelativeTo(frame);
             textWindow.setVisible(true);
             // JTextField textBox = new JTextField();
             JComboBox monthBox = new JComboBox();
@@ -441,6 +449,7 @@ public class Main {
             textWindow.add(textPanel);
             textWindow.setSize(600,300);
             textWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            textWindow.setLocationRelativeTo(frame);
             textWindow.setVisible(true);
             JTextField textBox = new JTextField();
             textPanel.add(textBox);
