@@ -322,23 +322,27 @@ public class Main {
         changeUsernameButton.addActionListener( e -> { // creating frame and adding panel for change username
             System.out.println("Change username button clicked");
             JFrame textWindow = new JFrame("Enter new username");
-            JPanel textPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+            JPanel textPanel = new JPanel();
+            textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
             textPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
             textWindow.add(textPanel);
             textWindow.setSize(600,300);
             textWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             textWindow.setLocationRelativeTo(frame);
-            textWindow.setVisible(true);
-            JTextField textBox = new JTextField();
-            textPanel.add(textBox);
-
+            JPanel usernamePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+            JTextField textBox = new JTextField(15);
+            usernamePanel.add(new JLabel("Username:"));
+            usernamePanel.add(textBox);
+            textPanel.add(usernamePanel);
             // add confirm / cancel buttons
             JButton confirmButton = new JButton();
             JButton cancelButton = new JButton();
             confirmButton.setText("Confirm");
             cancelButton.setText("Cancel");
-            textPanel.add(confirmButton);
-            textPanel.add(cancelButton);
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 5));
+            buttonPanel.add(confirmButton);
+            buttonPanel.add(cancelButton);
+            textPanel.add(buttonPanel);
 
             //functionality for confirm button
 
@@ -365,7 +369,10 @@ public class Main {
             cancelButton.addActionListener(d ->{
                 textWindow.dispose();
             });
+            
+            textWindow.setVisible(true);
             } // end of confirm button
+            
         );
 
         JButton changeBirthdayButton = new JButton("Change birthday");
@@ -373,40 +380,57 @@ public class Main {
         changeBirthdayButton.addActionListener( e -> { // creating frame and adding panel for change Birthday
             System.out.println("Change birthday button clicked");
             JFrame textWindow = new JFrame("Enter new birthday");
-            JPanel textPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+            JPanel textPanel = new JPanel();
+            textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
             textPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-            textWindow.add(textPanel);
-            textWindow.setSize(600,300);
+            textWindow.add(textPanel, BorderLayout.CENTER);
+            textWindow.setSize(400,300);
             textWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             textWindow.setLocationRelativeTo(frame);
-            textWindow.setVisible(true);
             // JTextField textBox = new JTextField();
+            JPanel birthdayPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
             JComboBox monthBox = new JComboBox();
+            monthBox.setPreferredSize(new Dimension(50, 30));
             // monthBox.setPreferredSize(null);
             
-            for (int i=0; i<13;i++){
+        
+            for (int i=1; i<13;i++){
                 monthBox.addItem(i);
 
             }
-            textPanel.add(monthBox);
+            birthdayPanel.add(new JLabel("Month:"));
+            birthdayPanel.add(monthBox);
+            
             
             
             JComboBox dayBox = new JComboBox();
-            dayBox.setSize(100, 100);
+            dayBox.setPreferredSize(new Dimension(50, 30));
+            
             //It can have fluctuating drop down size depending on which month was selected
             //monthBox.getName
-            for (int i=0; i<32;i++){
+            for (int i=1; i<32;i++){
                 dayBox.addItem(i);
  
             }
-               textPanel.add(dayBox);
+            birthdayPanel.add(new JLabel("Day:"));
+            birthdayPanel.add(dayBox);
+
+            textPanel.add(birthdayPanel);
             // add confirm / cancel buttons
             JButton confirmButton = new JButton();
             JButton cancelButton = new JButton();
+            confirmButton.setPreferredSize(new Dimension(100, 25));
+            cancelButton.setPreferredSize(new Dimension(100, 25));
+
+            
             confirmButton.setText("Confirm");
             cancelButton.setText("Cancel");
-            textPanel.add(confirmButton);
-            textPanel.add(cancelButton);
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 5));
+            buttonPanel.add(confirmButton);
+            buttonPanel.add(cancelButton);
+            textPanel.add(buttonPanel);
+
+           
 
             //functionality for confirm button
 
@@ -416,6 +440,8 @@ public class Main {
                 String newBirthday = newMonth + "/" + newDay;
                 String insertData = "UPDATE player SET Birthday = ? WHERE name = ?";
                 System.out.println("Birthday updated to: " + newBirthday);
+
+                
 
                 try (var conn =  DriverManager.getConnection(DB_URL)){ // creates a conn object that connects to the database
                 PreparedStatement pstmt = conn.prepareStatement(insertData); // creates a statement that will be able to query the database
@@ -427,6 +453,8 @@ public class Main {
                 System.out.println("Birthday updated!");
                 pstmt.executeUpdate();
                 birthday.setText(newBirthday);
+
+                JOptionPane.showMessageDialog(textWindow,"Your birthday has been successfully updated!","Birthday Updated", JOptionPane.INFORMATION_MESSAGE);
                 } catch(SQLException l){
                     System.out.println("failed to insert");
                 textWindow.dispose();
@@ -434,7 +462,12 @@ public class Main {
             // functionality for cancel button
             cancelButton.addActionListener(d ->{
                 textWindow.dispose();
+
+           
+
             });
+            //displays window 
+            textWindow.setVisible(true);
             } // end of confirm button
         );
 
@@ -444,13 +477,12 @@ public class Main {
         changeBioButton.addActionListener( e -> { // creating frame and adding panel for change Bio
             System.out.println("Change bio button clicked");
             JFrame textWindow = new JFrame("Enter new bio");
-            JPanel textPanel = new JPanel(new GridLayout(3, 2, 10, 10));
-            textPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+            JPanel textPanel = new JPanel(new GridLayout(2, 2, 10, 15));
+            textPanel.setBorder(BorderFactory.createEmptyBorder(30, 100, 30, 100));
             textWindow.add(textPanel);
             textWindow.setSize(600,300);
             textWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             textWindow.setLocationRelativeTo(frame);
-            textWindow.setVisible(true);
             JTextField textBox = new JTextField();
             textPanel.add(textBox);
 
