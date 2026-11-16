@@ -176,6 +176,78 @@ public class Main {
         // buttons for the setting tab 
         JButton profileButton = new JButton("Change Profile Picture");
         settings.add(profileButton);
+
+
+        JButton changeBirthdayButton = new JButton("Change birthday");
+        settings.add(changeBirthdayButton);
+        changeBirthdayButton.addActionListener( e -> { // creating frame and adding panel for change Birthday
+            System.out.println("Change birthday button clicked");
+            JFrame textWindow = new JFrame("Enter new birthday");
+            JPanel textPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+            textPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+            textWindow.add(textPanel);
+            textWindow.setSize(600,300);
+            textWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            textWindow.setVisible(true);
+            // JTextField textBox = new JTextField();
+            JComboBox monthBox = new JComboBox();
+            // monthBox.setPreferredSize(null);
+
+            for (int i=0; i<13;i++){
+                monthBox.addItem(i);
+
+            }
+            textPanel.add(monthBox);
+
+
+            JComboBox dayBox = new JComboBox();
+            dayBox.setSize(100, 100);
+            //It can have fluctuating drop down size depending on which month was selected
+            //monthBox.getName
+            for (int i=0; i<32;i++){
+                dayBox.addItem(i);
+
+            }
+               textPanel.add(dayBox);
+            // add confirm / cancel buttons
+            JButton confirmButton = new JButton();
+            JButton cancelButton = new JButton();
+            confirmButton.setText("Confirm");
+            cancelButton.setText("Cancel");
+            textPanel.add(confirmButton);
+            textPanel.add(cancelButton);
+
+            //functionality for confirm button
+
+            confirmButton.addActionListener(f -> {
+                String newMonth = monthBox.getSelectedItem().toString();
+                String newDay = dayBox.getSelectedItem().toString();
+                String newBirthday = newMonth + "/" + newDay;
+                String insertData = "UPDATE player SET Birthday = ? WHERE name = ?";
+                System.out.println("Birthday updated to: " + newBirthday);
+
+                try (var conn =  DriverManager.getConnection(DB_URL)){ // creates a conn object that connects to the database
+                PreparedStatement pstmt = conn.prepareStatement(insertData); // creates a statement that will be able to query the database
+                System.out.println("Connected to SQLite Database");
+                pstmt.setString(1, newBirthday);
+                pstmt.setString(2, user_ID);
+
+
+                System.out.println("Birthday updated!");
+                pstmt.executeUpdate();
+                birthday.setText(newBirthday);
+                } catch(SQLException l){
+                    System.out.println("failed to insert");
+                textWindow.dispose();
+                }});
+            // functionality for cancel button
+            cancelButton.addActionListener(d ->{
+                textWindow.dispose();
+            });
+            } // end of confirm button
+        );
+
+
         
 
 
