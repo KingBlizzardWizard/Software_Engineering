@@ -22,13 +22,18 @@ public class dbManager {
 // Returns the value of the column for the given username
 // query = the column you are trying to access
 // currentUser = the user whos table you are trying to access
-// e.g. -  getUserData(bio, Matt)
+// table = the table you are trying to access
+// e.g. -  getUserData(bio, Matt, 3)
 
-public static String getUserData(String query, String currentUser){
+
+// currently, the ability to access tables is unimplemented, but it should
+// be pretty easy to implement it later if its needed.
+
+public static String getUserData(int table, String currentUser, String query){
     //sql query to find profile
         System.out.println("Loading Query:");
         String sqlQuery = "SELECT " + query
-                        + " FROM player"
+                        + " FROM " + table
                         + " WHERE name = '" + currentUser + "'";
         System.out.println(sqlQuery);
 

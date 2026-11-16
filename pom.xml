@@ -41,6 +41,7 @@
         <include>Main.java</include>
         <include>ButtonManager.java</include>
         <include>dbManager.java</include>
+        <include>FriendManager.java</include>
     </includes>
 </configuration>
 
