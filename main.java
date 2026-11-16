@@ -24,7 +24,10 @@ public class Main {
     public static String retrievedUsername;
 
     public static void main(String[] args) {
-        login.createWindow();
+      //  login.createWindow();
+      //FriendManager.sendFriendRequest(2, 3);
+        FriendManager.acceptFriendRequest(2, 3);
+
     }
 
 
@@ -38,9 +41,9 @@ public class Main {
         System.out.println(sqlQuery);
 
         // connect to database and sets username, bio, and birthday strings to the retrieved values
-        retrievedBio = dbManager.getUserData("bio", user_ID);
-        retrievedBirthday = dbManager.getUserData("birthday", user_ID);
-        retrievedUsername = dbManager.getUserData("username", user_ID);
+        retrievedBio = dbManager.getUserData(0,"bio", user_ID);
+        retrievedBirthday = dbManager.getUserData(0,"birthday", user_ID);
+        retrievedUsername = dbManager.getUserData(0,"username", user_ID);
 
         //creates initial JFrame
         JFrame frame = new JFrame("My Profile");
