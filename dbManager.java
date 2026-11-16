@@ -29,7 +29,7 @@ public class dbManager {
 // currently, the ability to access tables is unimplemented, but it should
 // be pretty easy to implement it later if its needed.
 
-public static String getUserData(int table, String currentUser, String query){
+public static String getUserData(String table, String currentUser, String query){
     //sql query to find profile
         System.out.println("Loading Query:");
         String sqlQuery = "SELECT " + query

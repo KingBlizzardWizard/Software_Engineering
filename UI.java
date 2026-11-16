@@ -13,7 +13,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.BoxLayout;
 
-public class test {
+public class UI {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> createWindow());
@@ -42,6 +42,10 @@ public class test {
         navBar.add(logoutButton);
 
         frame.add(navBar, BorderLayout.NORTH);
+
+
+
+
 
         // Main content area
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -108,6 +112,27 @@ public class test {
             "Sample Post 3 here"
         ));
 
+
+
+        // homeButton.addActionListener(e -> pageLayout.show(pagePanel, "Posts"));
+        // profileButton.addActionListener(e -> pageLayout.show(pagePanel, "Posts"));
+        // friendsButton.addActionListener(e -> pageLayout.show(pagePanel, "Friends"));
+        // settingsButton.addActionListener(e -> pageLayout.show(pagePanel, "Settings"));
+        // logoutButton.addActionListener(e -> pageLayout.show(pagePanel, "Settings"));
+
+        logoutButton.addActionListener(e ->{
+            login.createWindow();
+            frame.dispose();
+        });
+
+
+
+
+
+
+
+
+
         JScrollPane postsScroll = new JScrollPane(postsFeed);
         postsScroll.setBorder(BorderFactory.createEmptyBorder());
 
@@ -146,4 +171,8 @@ public class test {
 
         return postCard;
     }
+
+
+
+
 }

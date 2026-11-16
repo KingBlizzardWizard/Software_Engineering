@@ -15,7 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
+// import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
@@ -207,7 +207,36 @@ public class Main {
         //creates the friends page as a placeholder
         //is on the center of the main one, to the right a it
         JPanel friends = new JPanel(new BorderLayout());
+        dbManager d = new dbManager();
         friends.add(new JLabel("Friends go here!", JLabel.CENTER), BorderLayout.NORTH);
+
+
+
+
+
+
+/*
+Loop through friendsDB and with matching userID as the current user
+Everytime it hits an approved friend increment by 1     May have to keep a list of friend's names aswell
+
+loop by as many times as there were approved friends
+print getUserDate("player", "*Approved Friend's name", "Username/Name")
+*/
+
+
+
+
+
+
+//Currently overwrites
+        friends.add(new JLabel(
+            d.getUserData("player", "Joao", "Username")
+            , JLabel.CENTER), BorderLayout.NORTH);
+        friends.add(new JLabel(
+            d.getUserData("player", "Owen", "Username")
+            , JLabel.CENTER), BorderLayout.NORTH);
+
+
         JPanel settings = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
 
         //string names identify each page
@@ -355,7 +384,7 @@ public class Main {
                 textWindow.dispose();
                 }});
             // functionality for cancel button
-            cancelButton.addActionListener(d ->{
+            cancelButton.addActionListener(d1 ->{
                 textWindow.dispose();
             });
             } // end of confirm button
@@ -424,7 +453,7 @@ public class Main {
                 textWindow.dispose();
                 }});
             // functionality for cancel button
-            cancelButton.addActionListener(d ->{
+            cancelButton.addActionListener(d2 ->{
                 textWindow.dispose();
             });
             } // end of confirm button
@@ -482,7 +511,7 @@ public class Main {
                 textWindow.dispose();
                 }}});
             // functionality for cancel button
-            cancelButton.addActionListener(d ->{
+            cancelButton.addActionListener(d3 ->{
                 textWindow.dispose();
             });
             } // end of confirm button

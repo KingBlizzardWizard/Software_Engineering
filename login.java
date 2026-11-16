@@ -181,6 +181,7 @@ public class login {
                             // displays a welome message to the player and their id
                             "Login successful! Welcome, " + username
                             + "!\nPlayer ID: " + rs.getInt("player_id"));
+                            // UI.main(null);
                             Main.initializeDefaultProfile(username); // QUERY SQL FOR PLAYER ID
                             frame.dispose();
                     } else {

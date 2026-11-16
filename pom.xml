@@ -34,6 +34,7 @@
     <includes>
         <include>login.java</include>
         <include>Main.java</include>
+        <include>UI.java</include>
         <include>dbManager.java</include>
         <include>FriendManager.java</include>
     </includes>
