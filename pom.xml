@@ -37,6 +37,7 @@
         <include>UI.java</include>
         <include>dbManager.java</include>
         <include>FriendManager.java</include>
+        <include>dbConnector.java</include>
     </includes>
 </configuration>
 

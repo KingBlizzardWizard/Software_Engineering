@@ -32,6 +32,7 @@ public class Main {
     // main method, this starts by opening the UI window
     public static void main(String[] args) {
         login.createWindow();
+
     }
 
     // declares the method that can be called from other classes, accepts user id as perameter, 
@@ -206,22 +207,111 @@ public class Main {
 
         //creates the friends page as a placeholder
         //is on the center of the main one, to the right a it
-        JPanel friends = new JPanel(new BorderLayout());
-        dbManager d = new dbManager();
-        friends.add(new JLabel("Friends go here!", JLabel.CENTER), BorderLayout.NORTH);
+        //IDK what this was^
 
 
-
-
-
-
-/*
+        //Layout is wrong rn but whatever
+        //Make it a scrollable list so that way they can ba stacked on top of eachother
+        /*
 Loop through friendsDB and with matching userID as the current user
 Everytime it hits an approved friend increment by 1     May have to keep a list of friend's names aswell
 
 loop by as many times as there were approved friends
 print getUserDate("player", "*Approved Friend's name", "Username/Name")
 */
+        
+        
+        JPanel friends = new JPanel(new BorderLayout());
+        friends.setLayout(new BoxLayout(friends, BoxLayout.PAGE_AXIS));
+        dbManager d = new dbManager();
+        FriendManager fr = new FriendManager();
+        friends.add(new JLabel("Friends go here!", JLabel.CENTER), BorderLayout.NORTH);
+
+
+
+
+
+        JButton AddFriendButton = new JButton("Add Friend");
+        friends.add(AddFriendButton);
+        AddFriendButton.addActionListener(e -> {
+            System.out.println("Friend Button Clicked");
+            String currentUser = user_ID;
+            System.out.println(currentUser);
+
+            JFrame textWindow = new JFrame("Enter new username");
+            JPanel textPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+            textPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+            textWindow.add(textPanel);
+            textWindow.setSize(600,300);
+            textWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            textWindow.setVisible(true);
+            JTextField textBox = new JTextField();
+            textPanel.add(textBox);
+
+
+            // add confirm / cancel buttons
+            JButton confirmButton = new JButton();
+            JButton cancelButton = new JButton();
+            confirmButton.setText("Confirm");
+            cancelButton.setText("Cancel");
+            textPanel.add(confirmButton);
+            textPanel.add(cancelButton);
+//This is currently doing the ENTIRE LIST
+            confirmButton.addActionListener(f -> {
+                String fwiend = textBox.getText();
+                System.out.print("HI");
+                System.out.print(fr.getStatus(d.getUserData("player", fwiend, "name"), d.getUserData("player", currentUser, "name")));
+//make do a pop up rather than println
+                if (fr.getStatus(d.getUserData("player", fwiend, "name"), d.getUserData("player", currentUser, "name"))=="ACCEPTED"){
+                    System.out.println("Already friends");
+                }else if(fr.getStatus(d.getUserData("player", fwiend, "name"), d.getUserData("player", currentUser, "name"))=="PENDING"){
+                    System.out.println("Friend request accepted.");
+//The way this works, you can send twice to become friends rather than needing to do it both ways 
+                }else{
+                    fr.sendFriendRequest(fwiend, currentUser);
+                    System.out.println("Fwiends");
+                }
+
+
+            });
+            
+            
+            
+            cancelButton.addActionListener(d1 ->{
+                textWindow.dispose();
+            });
+        });
+ 
+
+
+
+
+
+
+
+
+
+
+        //     //functionality for confirm button
+
+
+
+        //         try (var conn =  DriverManager.getConnection(DB_URL)){ // creates a conn object that connects to the database
+        //         PreparedStatement pstmt = conn.prepareStatement(insertData); // creates a statement that will be able to query the database
+        //         System.out.println("Connected to SQLite Database");
+        //         pstmt.setString(1, newUsername);
+        //         pstmt.setString(2, user_ID);
+
+
+        //         System.out.println("username updated!");
+        //         pstmt.executeUpdate();
+        //         username.setText(newUsername);
+        //         } catch(SQLException l){
+        //             System.out.println("failed to insert");
+        //         textWindow.dispose();
+        //         }});
+
+
 
 
 
@@ -230,11 +320,9 @@ print getUserDate("player", "*Approved Friend's name", "Username/Name")
 
 //Currently overwrites
         friends.add(new JLabel(
-            d.getUserData("player", "Joao", "Username")
-            , JLabel.CENTER), BorderLayout.NORTH);
+            d.getUserData("player", "Joao", "Username")));
         friends.add(new JLabel(
-            d.getUserData("player", "Owen", "Username")
-            , JLabel.CENTER), BorderLayout.NORTH);
+            d.getUserData("player", "Owen", "Username")));
 
 
         JPanel settings = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
@@ -546,7 +634,7 @@ print getUserDate("player", "*Approved Friend's name", "Username/Name")
     }
 
     // SOCIAL MEDIA PROFILE INSTEAD OF CHESS
-
+ 
 }
 
 
